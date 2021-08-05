@@ -1,9 +1,4 @@
-
 $(document).ready(function () {
-  $(".data-table").each(function (_, table) {
-    $(table).DataTable();
-  });
-
   // if deployed to a site supporting SSL, use wss://
   const protocol = document.location.protocol.startsWith('https') ? 'wss://' : 'ws://';
   const webSocket = new WebSocket(protocol + location.host);
@@ -154,7 +149,6 @@ $(document).ready(function () {
 
       pieChart.data.datasets[0].data = chart_data;
       pieChart.update();
-
 
       for(var i=0; i<class_names.length; i++){
         var object = class_names[i];

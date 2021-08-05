@@ -22,13 +22,16 @@ console.log(`Using event hub consumer group [${eventHubConsumerGroup}]`);
 
 // Redirect requests to the public subdirectory to the root
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dashboard3')));
 
 //app.use('/', function(req, res, next){
 //  res.sendFile(path.join(__dirname+'/public/index.html'));
 //});
 
 app.use('/moment', express.static(__dirname + '/node_modules/moment/dist/'));
+
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded());
 
 app.post('/total_counts', function (req, res, next){
   database.total_counts((err, result) => {
@@ -37,12 +40,15 @@ app.post('/total_counts', function (req, res, next){
 });
 
 app.post('/get_data', function (req, res, next){
-  var from_time = req.body.from_date;
-  var to_time = req.body.to_date;
+  console.log(req.body);
+  var from_time = req.body.from_time;
+  var to_time = req.body.to_time;
+  var group_by = req.body.group_by;
+  var minutes_offset = req.body.minutes_offset;
 
   database.get_data((err, result) => {
     res.json(result);
-  }, from_time, to_time);
+  }, from_time, to_time, group_by, minutes_offset);
 });
 
 const server = http.createServer(app);
